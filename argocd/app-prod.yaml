@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: web-app-prod
+  namespace: openshift-gitops
+spec:
+  project: web-app
+  source:
+    repoURL: https://github.com/sailaja/openshift-gitops-demo.git
+    targetRevision: release   # prod tracks a protected branch
+    path: apps/web-app/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: web-app-prod
+  syncPolicy:
+    # Manual sync in prod: drift is detected and reported (OutOfSync),
+    # a release manager approves the sync.
+    syncOptions:
+      - CreateNamespace=true

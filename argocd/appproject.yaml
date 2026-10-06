@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: web-app
+  namespace: openshift-gitops
+spec:
+  description: Web app across dev/test/prod
+  sourceRepos:
+    - https://github.com/sailaja/openshift-gitops-demo.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: web-app-dev
+    - server: https://kubernetes.default.svc
+      namespace: web-app-test
+    - server: https://kubernetes.default.svc
+      namespace: web-app-prod
+  namespaceResourceWhitelist:
+    - { group: "*", kind: "*" }
+  roles:
+    - name: release-manager
+      policies:
+        - p, proj:web-app:release-manager, applications, sync, web-app/*, allow
+      groups:
+        - web-app-release-managers

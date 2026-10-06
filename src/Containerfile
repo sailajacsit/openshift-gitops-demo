@@ -1,0 +1,6 @@
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal
+WORKDIR /opt/app-root/src
+COPY package.json server.js ./
+EXPOSE 8080
+USER 1001
+CMD ["node", "server.js"]

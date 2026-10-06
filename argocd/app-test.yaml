@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: web-app-test
+  namespace: openshift-gitops
+spec:
+  project: web-app
+  source:
+    repoURL: https://github.com/sailaja/openshift-gitops-demo.git
+    targetRevision: main
+    path: apps/web-app/overlays/test
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: web-app-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true      # auto-revert manual drift
+    syncOptions:
+      - CreateNamespace=true
